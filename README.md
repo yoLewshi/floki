@@ -11,9 +11,13 @@ A collection of cmds to make life easier, many are optimised to work well with [
 
 ## Getting Started
 
+You will need node.js and npm installed.
+
 Make a copy of the `config_example.js` file and name it `config.js` then update the values inside with your details.
 
 Notifications are done with [node-notifier]`https://www.npmjs.com/package/node-notifier` you may need to install terminal-notifier for it to work. This can be done with homebrew on mac `brew install terminal-notifier`. You may have issues getting the notifications to show, but there are some useful pages online to help.
+
+**In a terminal open the `floki` directory and run `npm link` to make the `floki` cmd accessible globally.**
 
 #### TextBar
 
