@@ -1,0 +1,26 @@
+{
+  "name": "floki",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Lewis Wilkie",
+  "license": "ISC",
+  "dependencies": {
+    "bent": "^7.3.12",
+    "commander": "^2.20.0",
+    "figlet": "^1.2.3",
+    "github-api": "^3.2.2",
+    "inquirer": "^6.5.2",
+    "node-notifier": "^5.4.3",
+    "node-notifier-cli": "^1.1.2",
+    "ora": "^3.4.0",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.7",
+    "shelljs": "^0.8.3"
+  },
+  "preferGlobal": true,
+  "bin": "./index.js"
+}
