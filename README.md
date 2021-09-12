@@ -1,4 +1,5 @@
-# floki
+![image](https://user-images.githubusercontent.com/52404579/131706825-98a7b3f8-e249-47c3-b0a4-bc56b9864040.png)
+
 
 A collection of cmds to make life easier, many are optimised to work well with [TextBar](http://richsomerfield.com/apps/textbar/) and [BetterTouchTool](https://www.folivora.ai/)
 
