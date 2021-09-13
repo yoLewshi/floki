@@ -22,6 +22,8 @@ Notifications are done with [node-notifier]`https://www.npmjs.com/package/node-n
 
 #### TextBar
 
+![image](https://user-images.githubusercontent.com/52404579/133063595-dedaf0c0-50b2-4548-a6a1-7f962d8285ec.png)
+
 If you're using TextBar try setting up a script with `floki github -q` the `-q` flag can be used on a number of floki cmds to limit the output. Use `textbar_scripts/openGitHubNotifications.sh` as the action script to go straight to your notifications when you click the textbar modal
 
 #### BetterTouchTool
