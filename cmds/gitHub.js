@@ -31,7 +31,7 @@ var gitHub = (function() {
     });
   };
 
-  var notifications = function(program, config) {
+  var notifications = function(program) {
     return me.listNotifications().then(response => {
       var items = response.data;
       var lastRepo = "";
