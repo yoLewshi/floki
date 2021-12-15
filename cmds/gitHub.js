@@ -32,66 +32,71 @@ var gitHub = (function() {
   };
 
   var notifications = function(program) {
-    return me.listNotifications().then(response => {
-      var items = response.data;
-      var lastRepo = "";
+    return me
+      .listNotifications()
+      .then(response => {
+        var items = response.data;
+        var lastRepo = "";
 
-      if (items.length) {
-        if (program.touchbar) {
-          let colour = "75,75,75";
-          if (items.length == 2) {
-            colour = "252,191,73,255";
-          } else if (items.length == 3) {
-            colour = "247,127,0,255";
-          } else if (items.length > 3) {
-            colour = "214,40,40,255";
-          }
-
-          console.log(
-            `{\"text\":\"${items.length}\",\"icon_data\": \"${icons.gitHub}\",\"background_color\": \"${colour}\"}`
-          );
-          console.log = () => {};
-        } else {
-          console.log(` 💬 ${items.length} `);
-        }
-
-        var titles = [];
-        var currentNotifications = "";
-
-        items.map((notification, i) => {
-          if (lastRepo != notification.repository.full_name) {
-            const spacer = new Array(
-              notification.repository.full_name.length + 4
-            ).join("-");
-            if (i > 0) {
-              console.log(spacer);
+        if (items.length) {
+          if (program.opts().touchbar) {
+            let colour = "75,75,75";
+            if (items.length == 2) {
+              colour = "252,191,73,255";
+            } else if (items.length == 3) {
+              colour = "247,127,0,255";
+            } else if (items.length > 3) {
+              colour = "214,40,40,255";
             }
-            console.log(notification.repository.full_name);
-            console.log(spacer);
-            lastRepo = notification.repository.full_name;
+
+            console.log(
+              `{\"text\":\"${items.length}\",\"icon_data\": \"${icons.gitHub}\",\"background_color\": \"${colour}\"}`
+            );
+            console.log = () => {};
+          } else {
+            console.log(` 💬 ${items.length} `);
           }
 
-          titles.push(notification.subject.title);
-          console.log(notification.subject.title);
-          currentNotifications += notification.id;
-        });
+          var titles = [];
+          var currentNotifications = "";
 
-        const lastNotified = db.read("gh.notifications");
+          items.map((notification, i) => {
+            if (lastRepo != notification.repository.full_name) {
+              const spacer = new Array(
+                notification.repository.full_name.length + 4
+              ).join("-");
+              if (i > 0) {
+                console.log(spacer);
+              }
+              console.log(notification.repository.full_name);
+              console.log(spacer);
+              lastRepo = notification.repository.full_name;
+            }
 
-        if (lastNotified != currentNotifications) {
-          systemCmds.notify(program, {
-            title: "PR Updated",
-            message: titles.join("\n"),
-            icon: config.gitHub.icon,
-            timeout: 8
+            titles.push(notification.subject.title);
+            console.log(notification.subject.title);
+            currentNotifications += notification.id;
           });
-          db.store("gh.notifications", currentNotifications);
+
+          const lastNotified = db.read("gh.notifications");
+
+          if (lastNotified != currentNotifications) {
+            systemCmds.notify(program, {
+              title: "PR Updated",
+              message: titles.join("\n"),
+              icon: config.gitHub.icon,
+              timeout: 8
+            });
+            db.store("gh.notifications", currentNotifications);
+          }
+        } else {
+          console.log("");
+          db.store("gh.notifications", "");
         }
-      } else {
-        console.log("");
-        db.store("gh.notifications", "");
-      }
-    });
+      })
+      .catch(error => {
+        console.log("-");
+      });
   };
 
   var needingReview = function() {
@@ -144,7 +149,7 @@ var gitHub = (function() {
     };
     runningCmd = null;
     deleteCmd =
-      'git checkout -q master && git for-each-ref refs/heads/ "--format=%(refname:short)" | while read branch; do mergeBase=$(git merge-base master $branch) && [[ $(git cherry master $(git commit-tree $(git rev-parse $branch^{tree}) -p $mergeBase -m _)) == "-"* ]] && echo $branch; done';
+      'git checkout -q main && git for-each-ref refs/heads/ "--format=%(refname:short)" | while read branch; do mergeBase=$(git merge-base main $branch) && [[ $(git cherry main $(git commit-tree $(git rev-parse $branch^{tree}) -p $mergeBase -m _)) == "-"* ]] && echo $branch; done';
 
     const prom = new Promise(resolve => {
       runningCmd = shell.exec(deleteCmd, baseOptions, resolve);
@@ -194,7 +199,7 @@ var gitHub = (function() {
 
     return Promise.all(proms).then(branchNames => {
       spinner.succeed(
-        `${successfulBranches} branches already in master were removed locally`
+        `${successfulBranches} branches already in main were removed locally`
       );
       branchNames.map(branchName => {
         console.log(`ᚼ ${branchName}`);
@@ -212,7 +217,7 @@ var gitHub = (function() {
     };
     runningCmd = null;
     branchCmd =
-      'git checkout -q master && git for-each-ref refs/heads/ "--format=%(refname:short)" | while read branch; do echo $branch; done';
+      'git checkout -q main && git for-each-ref refs/heads/ "--format=%(refname:short)" | while read branch; do echo $branch; done';
     let output = [];
     const prom = new Promise(resolve => {
       runningCmd = shell.exec(branchCmd, baseOptions, resolve);
@@ -224,7 +229,7 @@ var gitHub = (function() {
 
       return output.reduce((agg, branchName) => {
         const cleaned = branchName.replace(/(\\n)*\**\s*/gi, "");
-        if (cleaned.length && cleaned != "master") {
+        if (cleaned.length && cleaned != "main") {
           agg.push(cleaned);
         }
         return agg;
@@ -240,7 +245,7 @@ var gitHub = (function() {
         .prompt([
           {
             name: "branchesToDelete",
-            message: "Delete local branches not in master?",
+            message: "Delete local branches not in main?",
             type: "checkbox",
             choices: currentBranches.map(branchName => {
               return { name: branchName, value: branchName };

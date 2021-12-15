@@ -10,16 +10,16 @@
   "license": "ISC",
   "dependencies": {
     "bent": "^7.3.12",
-    "commander": "^2.20.0",
-    "figlet": "^1.2.3",
-    "github-api": "^3.2.2",
+    "commander": "^8.3.0",
+    "figlet": "^1.5.2",
+    "github-api": "^3.4.0",
     "inquirer": "^6.5.2",
-    "node-notifier": "^5.4.3",
-    "node-notifier-cli": "^1.1.2",
+    "node-notifier": "^5.4.5",
+    "node-notifier-cli": "^1.2.1",
     "ora": "^3.4.0",
-    "request": "^2.88.0",
-    "request-promise-native": "^1.0.7",
-    "shelljs": "^0.8.3"
+    "request": "^2.88.2",
+    "request-promise-native": "^1.0.9",
+    "shelljs": "^0.8.4"
   },
   "preferGlobal": true,
   "bin": "./index.js"

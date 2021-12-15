@@ -34,7 +34,7 @@ var weather = (function() {
           : p_Data.hourly.data[0].precipProbability)) /
       60;
 
-    if (program.touchbar) {
+    if (program.opts().touchbar) {
       summaryLines = [
         (emojiSummaries[p_Data.currently.icon]
           ? emojiSummaries[p_Data.currently.icon]
@@ -45,7 +45,7 @@ var weather = (function() {
           Math.round(rainRisk * 100) +
           "% 🌧️"
       ];
-    } else if (program.quiet) {
+    } else if (program.opts().quiet) {
       summaryLines = [
         (emojiSummaries[p_Data.currently.icon]
           ? emojiSummaries[p_Data.currently.icon]
@@ -115,9 +115,13 @@ var weather = (function() {
       "GET",
       200,
       headers
-    ).then(function(p_Response) {
-      return notifyWeather.bind(null, program)(p_Response);
-    });
+    )
+      .then(function(p_Response) {
+        return notifyWeather.bind(null, program)(p_Response);
+      })
+      .catch(error => {
+        console.log("- - -");
+      });
   };
 
   return {

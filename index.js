@@ -10,37 +10,42 @@ program
   .option("-q, --quiet", "no extra logs")
   .option("-t --touchbar", "touchbar formatting");
 
-program.parse(process.argv);
+program.addHelpText(
+  "after",
+  `
 
-if (!program.quiet) {
-  console.log("░█ floki █░");
-  // console.log(figlet.textSync('floki', {
-  //   font: 'dos rebel',
-  // }))
+  To view available commands:
+    $ floki commands`
+);
+
+function listCmds(command) {
+  command.parent.commands.map(cmd => {
+    console.log(`░█ ${cmd._name} - ${cmd._description}`);
+  });
 }
 
 program
   .command("chill")
   .alias("ch")
-  .description("Pause docker images")
+  .description("Pause popsss docker images")
   .action(dockerCmds.pause);
 
 program
   .command("work")
   .alias("w")
-  .description("Unpause docker images")
+  .description("Unpause popsss docker images")
   .action(dockerCmds.resume);
 
 program
   .command("stop")
   .alias("sto")
-  .description("Stop docker images")
+  .description("Stop popsss docker images")
   .action(dockerCmds.stop);
 
 program
   .command("start")
   .alias("sta")
-  .description("Start docker images")
+  .description("Start popsss docker images")
   .action(dockerCmds.start);
 
 program
@@ -52,7 +57,7 @@ program
 program
   .command("github")
   .alias("gh")
-  .description("Get github info")
+  .description("Get github notifications info")
   .action(gitHubCmds.notifications.bind(null, program));
 
 program
@@ -65,7 +70,19 @@ program
   .command("shout")
   .arguments("<title> <message>")
   .alias("s")
-  .description("Notify")
+  .description("Create system notification")
   .action(systemCmds.notify.bind(null, program));
 
+program
+  .command("commands")
+  .alias("cmd")
+  .description("View available commands")
+  .action(listCmds);
+
 program.parse(process.argv);
+if (!program.opts().quiet) {
+  console.log("░█ floki █░");
+  // console.log(figlet.textSync('floki', {
+  //   font: 'dos rebel',
+  // }))
+}
