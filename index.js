@@ -18,6 +18,14 @@ program.addHelpText(
     $ floki commands`
 );
 
+program.parse(process.argv);
+if (!program.opts().quiet) {
+  console.log("░█ floki █░");
+  // console.log(figlet.textSync('floki', {
+  //   font: 'dos rebel',
+  // }))
+}
+
 function listCmds(command) {
   command.parent.commands.map(cmd => {
     console.log(`░█ ${cmd._name} - ${cmd._description}`);
@@ -80,9 +88,3 @@ program
   .action(listCmds);
 
 program.parse(process.argv);
-if (!program.opts().quiet) {
-  console.log("░█ floki █░");
-  // console.log(figlet.textSync('floki', {
-  //   font: 'dos rebel',
-  // }))
-}

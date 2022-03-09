@@ -132,6 +132,7 @@ var gitHub = (function() {
 
     let output = [];
     try {
+      program.args.shift();
       const specific = program.args.length;
 
       if (specific && program.args[0].length) {
@@ -144,15 +145,16 @@ var gitHub = (function() {
     let baseOptions = {
       async: true,
       shell: config.paths.bash,
-      silent: true,
+      silent: false,
       detached: true
     };
     runningCmd = null;
-    deleteCmd =
+    findBranchesCmd =
       'git checkout -q main && git for-each-ref refs/heads/ "--format=%(refname:short)" | while read branch; do mergeBase=$(git merge-base main $branch) && [[ $(git cherry main $(git commit-tree $(git rev-parse $branch^{tree}) -p $mergeBase -m _)) == "-"* ]] && echo $branch; done';
 
     const prom = new Promise(resolve => {
-      runningCmd = shell.exec(deleteCmd, baseOptions, resolve);
+      runningCmd = shell.exec(findBranchesCmd, baseOptions, resolve);
+      return runningCmd;
     }).then((code, stdout, stderr) => {
       if (stderr) {
         output.push(`${cmd}: (err) ${stderr}`);
