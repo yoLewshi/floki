@@ -18,7 +18,9 @@ const config = {
   },
   gitHub: {
     token: "your-github-token-with-notifications-permission",
-    icon: path.join(__dirname, "..", "img/github.png")
+    icon: path.join(__dirname, "..", "img/github.png"),
+    reviewsFor: ["github-usernames-you-want-to-see-reviews-for"],
+    reviewCommentsLimit: 1, // reviews with more than this amount of comments will be excluded
   },
   weather: {
     darkSkyKey: "darksky-api-key",

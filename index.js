@@ -69,6 +69,12 @@ program
   .action(gitHubCmds.notifications.bind(null, program));
 
 program
+  .command("reviews")
+  .alias("re")
+  .description("Get github prs needing review")
+  .action(gitHubCmds.needingReview.bind(null, program));
+
+program
   .command("tidy")
   .alias("ght")
   .description("Remove merged local branches")

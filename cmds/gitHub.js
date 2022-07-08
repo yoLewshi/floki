@@ -110,14 +110,63 @@ var gitHub = (function() {
       var repo = gh.getRepo(me, repoName);
 
       repo.__fullname = repo.__fullname.replace("[object Object]/", "");
-      console.log(JSON.stringify(repo, null, 3));
+      //console.log(JSON.stringify(repo, null, 3));
 
       return repo.listPullRequests(searchOptions).then((prs, thing) => {
-        prs.map(pr => {
-          console.log(JSON.stringify(pr, null, 3));
-        });
-        console.log(thing);
+        const formattedPrs = prs.data.reduce((agg, pr) => {
+
+          if(pr.draft) {
+            return agg
+          }
+
+          if(pr.labels.length) {
+            let passedTests = false;
+            let qaRequired = false;
+            pr.labels.map((label) => {
+              if(passedTests && qaRequired) {
+                return
+              }
+
+              if(label.name === "Tests Passed") {
+                passedTests = true;
+              };
+
+              if(label.name === "QA Required") {
+                qaRequired = true;
+              };
+            });
+
+            if(!passedTests || qaRequired) {
+              return agg;
+            }
+          }
+
+          if(config.gitHub.reviewsFor.length){
+            if(config.gitHub.reviewsFor.indexOf(pr.user.login) === -1) {
+              return agg;
+            }
+          }
+
+          const formattedData = repo.getPullRequest(pr.number).then((detailedPr) => {
+            if(detailedPr.review_comments <= config.gitHub.reviewCommentsLimit) {
+            //console.log(detailedPr);
+              const prData = {title: pr.title, author: pr.user.login, comments: detailedPr.data.review_comments, lastUpdated: pr.updated_at}
+              return prData;
+            }
+          });
+
+          agg.push(formattedData);
+
+
+          return agg;
+
+        }, []);
+
+        Promise.all(formattedPrs).then((data) => {
+          printReviews(data.filter((pr) => pr != null));
+        })
       });
+
     });
 
     return Promise.all(prsForReview).then(prs => {
@@ -126,6 +175,23 @@ var gitHub = (function() {
       }, []);
     });
   };
+
+  function printReviews(reviewData) {
+    if(reviewData.length) {
+      console.log(`📖 ${reviewData.length}`);
+      reviewData.map((pr) => {
+
+        const shortName = pr.title.substr(0, 30).trim() + "...";
+
+        console.log(pr.title.length > 30 ? shortName : pr.title);
+        console.log(`  ${pr.lastUpdated.substr(0, 10)} - ${pr.author} [${pr.comments}]`)
+      })
+    }
+    else {
+      console.log("");
+    }
+  }
+
 
   var tidyLocalBranches = function(program) {
     getContext();
