@@ -131,7 +131,7 @@ var gitHub = (function() {
                 passedTests = true;
               };
 
-              if(label.name === "QA Required") {
+              if(label.name === "QA required") {
                 qaRequired = true;
               };
             });
