@@ -180,9 +180,9 @@ var gitHub = (function() {
       console.log(`📖 ${reviewData.length}`);
       reviewData.map((pr) => {
 
-        const shortName = pr.title.substr(0, 30).trim() + "...";
+        const shortName = pr.title.substr(0, 50).trim() + "...";
 
-        console.log(pr.title.length > 30 ? shortName : pr.title);
+        console.log(pr.title.length > 50 ? shortName : pr.title);
         console.log(`  ${pr.lastUpdated.substr(0, 10)} - ${pr.author} [${pr.comments}]`)
       })
     }
