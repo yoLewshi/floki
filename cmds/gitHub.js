@@ -1,4 +1,5 @@
 var GitHub = require("github-api");
+const { Octokit } = require("@octokit/core");
 const shell = require("shelljs");
 const ora = require("ora");
 var inquirer = require("inquirer");
@@ -8,6 +9,11 @@ const db = require("./db.js");
 
 const icons = require("../img/base64.js");
 const config = require("../config.js");
+
+const octokit = new Octokit({
+  auth: config.gitHub.token
+})
+
 
 var gitHub = (function() {
   var gh = new GitHub({
@@ -147,12 +153,23 @@ var gitHub = (function() {
             }
           }
 
-          const formattedData = repo.getPullRequest(pr.number).then((detailedPr) => {
-            if(detailedPr.data.review_comments <= config.gitHub.reviewCommentsLimit) {
-              const prData = {title: pr.title, author: pr.user.login, comments: detailedPr.data.review_comments, lastUpdated: pr.updated_at}
+          const formattedData = octokit.request('GET /repos/{owner}/{repo}/pulls/{pull_number}/reviews', {
+            owner: repoName.split("/")[0],
+            repo: repoName.split("/")[1],
+            pull_number: pr.number
+          }).then((reviews) => {
+            if(reviews.data.length === 0) {
+              const prData = {title: pr.title, author: pr.user.login, lastUpdated: pr.updated_at}
               return prData;
             }
           });
+
+          // const formattedData = repo.getPullRequest(pr.number).then((detailedPr) => {
+          //   if(detailedPr.data.review_comments <= config.gitHub.reviewCommentsLimit) {
+          //     const prData = {title: pr.title, author: pr.user.login, comments: detailedPr.data.review_comments, lastUpdated: pr.updated_at}
+          //     return prData;
+          //   }
+          // });
 
           agg.push(formattedData);
 
@@ -183,7 +200,8 @@ var gitHub = (function() {
         const shortName = pr.title.substr(0, 50).trim() + "...";
 
         console.log(pr.title.length > 50 ? shortName : pr.title);
-        console.log(`  ${pr.lastUpdated.substr(0, 10)} - ${pr.author} [${pr.comments}]`)
+        //console.log(`  ${pr.lastUpdated.substr(0, 10)} - ${pr.author} [${pr.comments}]`)
+        console.log(`  ${pr.lastUpdated.substr(0, 10)} - ${pr.author}`)
       })
     }
     else {

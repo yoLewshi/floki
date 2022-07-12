@@ -9,6 +9,7 @@
   "author": "Lewis Wilkie",
   "license": "ISC",
   "dependencies": {
+    "@octokit/core": "^4.0.4",
     "bent": "^7.3.12",
     "commander": "^8.3.0",
     "figlet": "^1.5.2",
