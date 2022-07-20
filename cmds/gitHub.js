@@ -164,15 +164,7 @@ var gitHub = (function() {
             }
           });
 
-          // const formattedData = repo.getPullRequest(pr.number).then((detailedPr) => {
-          //   if(detailedPr.data.review_comments <= config.gitHub.reviewCommentsLimit) {
-          //     const prData = {title: pr.title, author: pr.user.login, comments: detailedPr.data.review_comments, lastUpdated: pr.updated_at}
-          //     return prData;
-          //   }
-          // });
-
           agg.push(formattedData);
-
 
           return agg;
 
