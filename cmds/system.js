@@ -17,7 +17,9 @@ var system = function()
           wait: true,
           icon: (options.icon || path.join(__dirname, '..', 'img/runes.png')),
           contentImage: (options.icon || path.join(__dirname, '..', 'img/runes.png')),
-        }, (err, response) => {
+        }, (err, response, meta) => {
+          // console.log(response)
+          // console.log(meta)
         if(err)
         {
           console.error(err);
