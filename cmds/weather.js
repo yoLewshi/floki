@@ -127,8 +127,6 @@ var weather = (function() {
     var rainRisk = (rainNow + (rainNow * (currentForecastWeight)) + currentForecastBlock.pop * (currentForecastWeight)) /3;
         //(nextForecastBlock.pop * (1 - nextForecastWeight)));
   
-    console.log(rainNow, currentForecastWeight);
-
     const slotsToCheck = 8;
     const rainRiskDay = forecast.reduce((agg, slot, i) => {
       if(i>=slotsToCheck) {
