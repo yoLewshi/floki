@@ -124,7 +124,7 @@ var weather = (function() {
     // forecast is in 3 hour blocks
     const nextForecastWeight = (nextForecastBlock.dt - dtNow) / (60 * 60 * 3);
 
-    var rainRisk = (rainNow + (rainNow * (currentForecastWeight)) + currentForecastBlock.pop * (currentForecastWeight)) /3;
+    var rainRisk = (rainNow + (currentForecastBlock.pop * (currentForecastWeight))) /2;
         //(nextForecastBlock.pop * (1 - nextForecastWeight)));
   
     const slotsToCheck = 8;
