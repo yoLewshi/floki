@@ -108,15 +108,26 @@ var weather = (function() {
 
     var currentMinute = new Date().getMinutes() + 1;
     const dtNow = Math.round((new Date()).getTime() / 1000);
-    const timeDiff = (forecast[0].dt - dtNow) / 60 / 60;
     // weight by how far through the current hour we are
     // at start of hour only the current forecast is important, this then shifts at the end of the hour to look at the next hours forecast   
-    var rainRisk =
-      (forecast[0].pop * (timeDiff) +
-        (forecast.length > 1
-          ? forecast[1].pop * (1 - timeDiff)
-          : forecast[0].pop));
     
+    const rainNow = p_Data.rain ? 1 : 0;
+    let index;
+    const currentForecastBlock = forecast.find((block, i) => {
+      index = i;
+      return block.dt > dtNow;
+    })
+    // forecast is in 3 hour blocks
+    const currentForecastWeight = (currentForecastBlock.dt - dtNow) / (60 * 60 * 3);
+
+    const nextForecastBlock = forecast[index + 1];
+    // forecast is in 3 hour blocks
+    const nextForecastWeight = (nextForecastBlock.dt - dtNow) / (60 * 60 * 3);
+
+    var rainRisk = (rainNow + (rainNow * (currentForecastWeight)) + currentForecastBlock.pop * (currentForecastWeight)) /3;
+        //(nextForecastBlock.pop * (1 - nextForecastWeight)));
+  
+    console.log(rainNow, currentForecastWeight);
 
     const slotsToCheck = 8;
     const rainRiskDay = forecast.reduce((agg, slot, i) => {
