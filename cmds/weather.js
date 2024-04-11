@@ -7,6 +7,7 @@ var weather = (function() {
   var emojiSummaries = {
     rain: "🌧️",
     Rain: "🌧️",
+    Drizzle: "🌧️",
     cloudy: "☁️",
     Clouds: "☁️",
     "very-cloudy-night": "☁️",
