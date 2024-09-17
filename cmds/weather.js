@@ -155,9 +155,9 @@ var weather = (function() {
           ? emojiSummaries[p_Data.weather[0].main]
           : p_Data.weather[0].main) +
           " " +
-          convertKToC(p_Data.main.feels_like) +
+          convertKToC(p_Data.main.feels_like).toString().padStart(2) +
           "°C  " +
-          Math.round(rainRisk * 100) +
+          Math.round(rainRisk * 100).toString().padStart(3) +
           "% 🌧️",
         "Today it's between " +
           convertKToC(p_Data.main.temp_min) +
